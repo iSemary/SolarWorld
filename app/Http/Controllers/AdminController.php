@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Auth;
 
+use http\Env\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 
@@ -105,123 +106,145 @@ class AdminController extends Controller {
 
         }
         elseif ($fileType == "series") {
-            // Validate File
+//             Validate File
             $validator = Validator::make($request->all(), [
-                'file_name' => 'required|unique:downloads_infos',
                 'series_quality' => 'required',
                 'series_sub_category' => 'required',
                 'seriesThumbnail' => 'required',
                 'series_year' => 'required',
                 'series_language' => 'required',
-                'seriesFile' => 'required|mimes:mp4,mov,ogg,avi,wmv,m3u8,ts,mov,qt',
             ]);
 
             if ($validator->fails()) {
                 return response()->json($validator->errors()->first());
-            } elseif (File::where('file_hash_key', md5($request->seriesFile))->count() > 0) {
-                return response()->json('File already exist');
             }
 
-
-            // Uploading File
-
-            $SeriesStore = $request->seriesFile->store('main-files/series/' . $request->file_name, 'public');
-            $SeriesThumbnialStore = $request->seriesThumbnail->store('main-files/series/' . $request->file_name, 'public');
-
-            // Series Duration
-
-            $getID3 = new \getID3;
-            $getFile = $getID3->analyze($request->seriesFile);
-            $duration = date('H:i:s.v', $getFile['playtime_seconds']);
-
-            // Upload File Data to DB
-
-            $File = File::create([
-                'file_name' => $request->file_name,
-                'file_path' => 'main-files/series/' . $request->file_name . '/',
-                'file_category' => '2',
-                'file_hash_key' => md5($request->seriesFile),
-                'username_uploaded' => auth::user()->user_name
-            ]);
-
-            // Upload Series Data To DB
-
-            $Series = Series::create([
-                'file_id' => $File->id,
-                'file_uploaded_name' => $request->seriesFile->getClientOriginalName(),
-                'file_name' => $request->seriesFile->hashName(),
-                'series_size' => $request->seriesFile->getSize(),
-                'series_quality' => $request->series_quality,
-                'series_sub_category' => $request->series_sub_category,
-                'series_thumbnail' => $request->seriesThumbnail->hashName(),
-                'series_year' => $request->series_year,
-                'series_duration' => $duration,
-                'series_language' => $request->series_language,
-            ]);
+            $SeriesThumbnialStore = $request->seriesThumbnail->store('main-files/series/'. $request->file_name .'/season-'.$request->series_season.'/' , 'public');
 
 
+
+            foreach ($request->seriesFile as $SeriesFiles){
+
+                if (File::where('file_hash_key', md5($SeriesFiles))->count() > 0) {
+                    return response()->json($SeriesFiles->getClientOriginalName() . 'File already exist');
+                }
+                $validator = Validator::make(['seriesFile'=>$SeriesFiles], [
+                    'seriesFile' => 'required|mimes:mp4,mov,ogg,avi,wmv,m3u8,ts,mov,qt',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json($validator->errors()->first(). '<br><b> Failed File :' .$SeriesFiles->getClientOriginalName().'</b>');
+                }
+
+
+                // Uploading Files
+                $SeriesStore = $SeriesFiles->store('main-files/series/'. $request->file_name .'/season-'.$request->series_season.'/' , 'public');
+
+
+                // Series Duration
+                $getID3 = new \getID3;
+                $getFile = $getID3->analyze($SeriesFiles);
+                $duration = date('H:i:s.v', $getFile['playtime_seconds']);
+
+                // Upload File Data to DB
+
+                $File = File::create([
+                    'file_name' => $request->file_name,
+                    'file_path' => 'main-files/series/' . $request->file_name . '/',
+                    'file_category' => '2',
+                    'file_hash_key' => md5($SeriesFiles),
+                    'username_uploaded' => auth::user()->user_name
+                ]);
+
+                // Upload Series Data To DB
+
+                $Series = Series::create([
+                    'file_id' => $File->id,
+                    'file_uploaded_name' => $SeriesFiles->getClientOriginalName(),
+                    'file_name' => $SeriesFiles->hashName(),
+                    'series_season' => $request->series_season,
+                    'series_size' => $SeriesFiles->getSize(),
+                    'series_quality' => $request->series_quality,
+                    'series_sub_category' => $request->series_sub_category,
+                    'series_thumbnail' => $request->seriesThumbnail->hashName(),
+                    'series_year' => $request->series_year,
+                    'series_duration' => $duration,
+                    'series_language' => $request->series_language,
+                ]);
+
+
+            }
             return response()->json('');
 
         }
         elseif ($fileType == "anime") {
-            // Validate File
+//             Validate File
             $validator = Validator::make($request->all(), [
-                'file_name' => 'required|unique:downloads_infos',
                 'anime_quality' => 'required',
                 'anime_sub_category' => 'required',
                 'animeThumbnail' => 'required',
                 'anime_year' => 'required',
                 'anime_language' => 'required',
-                'animeFile' => 'required|mimes:mp4,mov,ogg,avi,wmv,m3u8,ts,mov,qt',
             ]);
 
             if ($validator->fails()) {
                 return response()->json($validator->errors()->first());
-            } elseif (File::where('file_hash_key', md5($request->animeFile))->count() > 0) {
-                return response()->json('File already exist');
             }
 
-
-            // Uploading File
-
-            $AnimeStore = $request->animeFile->store('main-files/anime/' . $request->file_name, 'public');
-            $AnimeThumbnialStore = $request->animeThumbnail->store('main-files/anime/' . $request->file_name, 'public');
-
-            // Anime Duration
-
-            $getID3 = new \getID3;
-            $getFile = $getID3->analyze($request->animeFile);
-            $duration = date('H:i:s.v', $getFile['playtime_seconds']);
-
-            // Upload File Data to DB
-
-            $File = File::create([
-                'file_name' => $request->file_name,
-                'file_path' => 'main-files/anime/' . $request->file_name . '/',
-                'file_category' => '4',
-                'file_hash_key' => md5($request->animeFile),
-                'username_uploaded' => auth::user()->user_name
-            ]);
-
-            // Upload Anime Data To DB
-
-            $Anime = Anime::create([
-                'file_id' => $File->id,
-                'file_uploaded_name' => $request->animeFile->getClientOriginalName(),
-                'file_name' => $request->animeFile->hashName(),
-                'anime_size' => $request->animeFile->getSize(),
-                'anime_quality' => $request->anime_quality,
-                'anime_sub_category' => $request->anime_sub_category,
-                'anime_thumbnail' => $request->animeThumbnail->hashName(),
-                'anime_year' => $request->anime_year,
-                'anime_duration' => $duration,
-                'anime_language' => $request->anime_language,
-            ]);
+            $AnimeThumbnialStore = $request->animeThumbnail->store('main-files/anime/'. $request->file_name .'/season-'.$request->anime_season.'/' , 'public');
 
 
+
+            foreach ($request->animeFile as $AnimeFiles){
+
+                if (File::where('file_hash_key', md5($AnimeFiles))->count() > 0) {
+                    return response()->json($AnimeFiles->getClientOriginalName() . 'File already exist');
+                }
+                $validator = Validator::make(['animeFile'=>$AnimeFiles], [
+                    'animeFile' => 'required|mimes:mp4,mov,ogg,avi,wmv,m3u8,ts,mov,qt',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json($validator->errors()->first(). '<br><b> Failed File :' .$AnimeFiles->getClientOriginalName().'</b>');
+                }
+
+
+                // Uploading Files
+                $AnimeStore = $AnimeFiles->store('main-files/anime/'. $request->file_name .'/season-'.$request->anime_season.'/' , 'public');
+
+
+                // Anime Duration
+                $getID3 = new \getID3;
+                $getFile = $getID3->analyze($AnimeFiles);
+                $duration = date('H:i:s.v', $getFile['playtime_seconds']);
+
+                // Upload File Data to DB
+
+                $File = File::create([
+                    'file_name' => $request->file_name,
+                    'file_path' => 'main-files/anime/' . $request->file_name . '/',
+                    'file_category' => '4',
+                    'file_hash_key' => md5($AnimeFiles),
+                    'username_uploaded' => auth::user()->user_name
+                ]);
+
+                // Upload Anime Data To DB
+
+                $Anime = Anime::create([
+                    'file_id' => $File->id,
+                    'file_uploaded_name' => $AnimeFiles->getClientOriginalName(),
+                    'file_name' => $AnimeFiles->hashName(),
+                    'anime_season' => $request->anime_season,
+                    'anime_size' => $AnimeFiles->getSize(),
+                    'anime_quality' => $request->anime_quality,
+                    'anime_sub_category' => $request->anime_sub_category,
+                    'anime_thumbnail' => $request->animeThumbnail->hashName(),
+                    'anime_year' => $request->anime_year,
+                    'anime_duration' => $duration,
+                    'anime_language' => $request->anime_language,
+                ]);
+
+
+            }
             return response()->json('');
-
-
         }
         elseif ($fileType == "music") {
             // Validate File

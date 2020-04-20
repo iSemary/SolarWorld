@@ -192,6 +192,10 @@
                                 <input type="text" disabled name="file_name" id="file_name" class="form-control" placeholder="Series Name">
                             </div>
                             <div class="form-group">
+                                <label for="">Series Season</label>
+                                <input type="text" disabled name="series_season" id="series_season" class="form-control" placeholder="Series Season">
+                            </div>
+                            <div class="form-group">
                                 <label for="">Series Quality</label>
                                 <select class="form-control" disabled name="series_quality">
                                     <option value="4K">4K</option>
@@ -219,7 +223,6 @@
                                 <label for="">Series Year</label>
                                 {!! Form::selectYear('year', 1900, 2020, null ,['class' => 'form-control', 'name' => 'series_year','disabled']) !!}
                             </div>
-
                             <div class="form-group">
                                 <label for="">Series Language</label>
                                 <select disabled name="series_language" class="form-control">
@@ -297,8 +300,6 @@
                                     <option value="XH">Xhosa</option>
                                 </select>
                             </div>
-
-
                             <div class="form-group">
                                 <label for="">Series thumbnail</label>
                                 <div class="file-upload">
@@ -316,7 +317,7 @@
                                     <div class="file-select">
                                         <div class="file-select-button" id="fileName">Choose File</div>
                                         <div class="file-select-name" id="noFile">No file chosen...</div>
-                                        <input type="file" disabled name="seriesFile">
+                                        <input type="file" disabled name="seriesFile[]" multiple>
                                     </div>
                                 </div>
                             </div>
@@ -460,6 +461,11 @@
                                 <label for="">Anime Name</label>
                                 <input type="text" disabled name="file_name" id="file_name" class="form-control" placeholder="Anime Name">
                             </div>
+
+                            <div class="form-group">
+                                <label for="">Anime Season</label>
+                                <input type="text" disabled name="anime_season" id="anime_season" class="form-control" placeholder="Anime Season">
+                            </div>
                             <div class="form-group">
                                 <label for="">Anime Quality</label>
                                 <select class="form-control" disabled name="anime_quality">
@@ -585,7 +591,7 @@
                                     <div class="file-select">
                                         <div class="file-select-button" id="fileName">Choose File</div>
                                         <div class="file-select-name" id="noFile">No file chosen...</div>
-                                        <input type="file" disabled name="animeFile">
+                                        <input type="file" disabled name="animeFile[]" multiple>
                                     </div>
                                 </div>
                             </div>

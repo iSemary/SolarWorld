@@ -1,13 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
+use Request;
 use App\File;
 use App\Game;
 use App\Program;
-
+use App\DownloadTraffic;
 class ViewController extends Controller {
     public function index() {
         return view('welcome');
@@ -82,11 +81,18 @@ class ViewController extends Controller {
     public function download_file($file) {
         $GetFile = File::where('id', $file)->first();
         if ($GetFile) {
+
+            $DownloadLog = DownloadTraffic::create([
+                'file_id'=>$GetFile->id,
+                'user_ip'=>Request::ip()
+            ]);
+
             if ($GetFile->file_category == '5') {
                 $GetFileName = Game::where('file_id', $file)->first();
                 return Storage::download('public/' . $GetFile->file_path . $GetFileName->file_name,
                     $GetFile->file_name . '_' . $GetFileName->game_version . '.zip'
                 );
+
             } elseif ($GetFile->file_category == '6') {
                 $GetFileName = Program::where('file_id', $file)->first();
                 return Storage::download('public/' . $GetFile->file_path . $GetFileName->file_name,

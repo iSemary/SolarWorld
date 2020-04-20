@@ -4,18 +4,6 @@
 
 Auth::routes();
 
-// Main Routes
-Route::get('/', 'ViewController@index');
-// View Page with Value => Movies / Series / Music
-Route::get('/{value}','ViewController@show_as')->name('view.value');
-// View Page with value and name => Movie => spiderman
-Route::get('/{value}/{name}','ViewController@show_with_name')->name('view.value.name');
-// Download File with id
-Route::post('/download/{file}','ViewController@download_file')->name('view.download.file');
-// After Login/Register
-Route::get('/home', 'HomeController@index')->name('home');
-
-
 
 // Admin Routes
 Route::group(['middleware' => ['auth', 'CheckRole']], function() {
@@ -43,5 +31,20 @@ Route::group(['middleware' => ['auth', 'CheckRole']], function() {
     Route::post('admin/sub-category/save','CategoryController@store_sub_categories')->name('admin.store_sub_category');
 
 });
+
+// Main Routes
+Route::get('/', 'ViewController@index');
+// View Page with Value => Movies / Series / Music
+Route::get('/{value}','ViewController@show_as')->name('view.value');
+// View Page with value and name => Movie => spiderman
+Route::get('/{value}/{name}','ViewController@show_with_name')->name('view.value.name');
+// Download File with id
+Route::post('/download/{file}','ViewController@download_file')->name('view.download.file');
+// After Login/Register
+Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+
 
 
