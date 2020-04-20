@@ -10,14 +10,22 @@ body,table {
 .dark-purple {
     background-color: #340032 !important;
     color: #ffffff;
+    border-radius: 5px;
 }
 .dark-blue {
     background-color: #20244e !important;
     color: #FFFFFF !important;
+    border-radius: 5px;
 }
 .light-red {
+    transition: 0.5s ease-in-out !important;
     background-color: #d20000 !important;
     color: #FFFFFF !important;
+    border-radius: 5px;
+}
+.light-red:hover{
+    background-color: #d200009e !important;
+
 }
 .light-red i {
     color: #ffffff !important;
@@ -287,6 +295,34 @@ form#admin_users_control::-webkit-scrollbar-thumb:hover {
 .sub-categories-name {
 
 }
+
+.type-player-name {
+    font-size: 26px;
+    font-weight: bold;
+    font-family: Raleway;
+}
+.type-player-name span {
+    background-color: #d20000;
+    padding: 3px 7px;
+    font-size: 15px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+.type-player-time {
+    font-family: Raleway;
+    font-weight: bold;
+    border: 1px solid;
+    padding: 4px;
+    border-radius: 5px;
+}
+/*
+    MUSIC PLAYER
+*/
+.plyr--audio {
+    width: 50% !important;
+    border-radius: 8px !important;
+}
+
 /*
     FILE UPLOAD
 */

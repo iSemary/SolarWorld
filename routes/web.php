@@ -10,8 +10,8 @@ Route::get('/', 'ViewController@index');
 Route::get('/{value}','ViewController@show_as')->name('view.value');
 // View Page with value and name => Movie => spiderman
 Route::get('/{value}/{name}','ViewController@show_with_name')->name('view.value.name');
-
-
+// Download File with id
+Route::post('/download/{file}','ViewController@download_file')->name('view.download.file');
 // After Login/Register
 Route::get('/home', 'HomeController@index')->name('home');
 

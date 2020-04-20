@@ -37,7 +37,6 @@
             </main>
         </div>
     </div>
-    <div id="slickInfo" style="display: none">@if(isset($value)){{$types::count()}}@endif</div>
 @endsection('content')
 @section('scripts')
     <script>

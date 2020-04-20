@@ -11,7 +11,7 @@ class File extends Model
     protected $fillable=['file_name','file_path','file_category','file_hash_key','username_uploaded'];
 
     public function movie(){
-        return $this->belongsToMany('App\Movie','movies_infos','file_id');
+        return $this->belongsToMany('App\Movie','movies_infos','file_id','id');
     }
     public function series(){
         return $this->belongsToMany('App\Series','series_infos','file_id');

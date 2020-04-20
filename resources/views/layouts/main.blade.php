@@ -505,5 +505,6 @@
             </div>
         </div>
         @endif
-    @endif
+    <div id="slickInfo" style="display: none">@if(isset($value)){{$types::count()}}@endif</div>
+@endif
 @include('layouts.feedback')

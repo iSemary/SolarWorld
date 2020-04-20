@@ -312,7 +312,7 @@ class AdminController extends Controller {
 
             $File = File::create([
                 'file_name' => $request->file_name,
-                'file_path' => 'main-files/game/' . $request->file_name . '/',
+                'file_path' => 'main-files/program/' . $request->file_name . '/',
                 'file_category' => '6',
                 'file_hash_key' => md5($request->programFile),
                 'username_uploaded' => auth::user()->user_name

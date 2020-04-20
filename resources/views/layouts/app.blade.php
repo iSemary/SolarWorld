@@ -14,6 +14,8 @@
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     {{--  Slick --}}
     <script src="{{ asset('js/slick.min.js') }}"></script>
+    {{--  plyr Video/Audio Player  --}}
+    <script src="{{asset('js/plyr.min.js')}}"></script>
 
 
     <!-- Fonts -->
@@ -31,6 +33,8 @@
     <!--  Slick  -->
     <link href="{{ asset('css/slick-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/slick.css') }}" rel="stylesheet">
+    {{--  plyr Video/Audio Player  --}}
+    <link rel="stylesheet" href="{{asset('css/plyr.css')}}">
     {{--    Logo Font--}}
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
 
@@ -86,6 +90,9 @@
                 });
             });
         });
+    </script>
+    <script>
+        const player = new Plyr('#MusicPlayer, #moviePlayer', {});
     </script>
     @include('sweetalert::alert')
 </body>
