@@ -2,8 +2,8 @@
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
             <li class="pb-3">
-                {{--                            <img src="{{asset('storage/main-content/SolarWorldLOGO.png')}}" class="top-logo-img" alt="">--}}
-                <a class="top-logo" href="#">Solar World</a>
+{{--     <img src="{{asset('storage/main-content/SolarWorldLOGO.png')}}" class="top-logo-img" alt="">--}}
+                <a class="top-logo" href="{{URL::to('/')}}">Solar World</a>
                 <p class="top-p">All world stuff here.</p>
             </li>
             <li class="nav-item">
@@ -59,9 +59,7 @@
                     <span><i class="fas fa-user-astronaut"></i> Select actor </span>
                 </h6>
                 <select class="form-control aside-select">
-                    <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
-                    <option data-tokens="mustard">Burger, Shake and a Smile</option>
-                    <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                    <option data-tokens="ketchup mustard">NOT</option>
                 </select>
             </li>
 

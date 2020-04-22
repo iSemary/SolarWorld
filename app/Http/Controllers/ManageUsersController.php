@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 use \Validator;
 use Illuminate\Validation\Rule;
-
 use Illuminate\Http\Request;
 use App\User;
 use App\Role_user;

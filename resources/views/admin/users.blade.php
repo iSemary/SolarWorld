@@ -14,34 +14,7 @@
     </style>
 @endsection
 @section('content')
-    <nav class="navbar admin-nav navbar-expand-lg navbar-light bg-light" style="box-shadow: 0px 0px 14px #f8f9faa6;">
-        <a class="navbar-brand" href="/">Solar World</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{route('admin.dashboard')}}">Dashboard <span
-                                class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="{{route('admin.upload')}}">Upload</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="{{route('admin.users_show')}}">Administrators</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="">Disabled</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
-    </nav>
+    @include('admin.admin-layouts.header')
     <div class="container-fluid">
         <div class="row">
             <nav class="col-md-2 d-none d-md-block sidebar">
@@ -135,14 +108,14 @@
                                                     <td>{{$user->id}}</td>
                                                     <td><i class="fas fa-at"></i>{{Str::slug($user->user_name, '_')}}</td>
                                                     <td>{{$user->full_name}}</td>
-                                                    @if(auth::user()->role->first()->name == "Administrator")
+                                                    @if(Auth::user()->role->first()->name == "Administrator")
                                                         <td>{{$user->email}}</td>
                                                     @else
                                                         <b>Permission Denied</b>
                                                     @endif
                                                     <td>{{$role->name}}</td>
                                                     <td>
-                                                        @if(auth::user()->role->first()->name == "Administrator")
+                                                        @if(Auth::user()->role->first()->name == "Administrator")
                                                             <a class="pl-1 btn btn-primary" style="padding: 0 5px;"
                                                                href="{{URL::to('user/'.Str::slug($user->user_name, '_'))}}">
                                                                 <i class="far fa-eye"></i>
@@ -283,7 +256,6 @@
                                                 <td id="fullname_action">{{$user->full_name}}</td>
                                                 <td id="email_action">
                                                     {{ \App\Http\Controllers\FunctionsController::email_stars($user->email)}}
-
                                                 </td>
                                                 <td><b>Permission Denied</b></td>
                                             </tr>

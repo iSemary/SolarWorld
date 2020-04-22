@@ -7,9 +7,15 @@ use App\File;
 use App\Game;
 use App\Program;
 use App\DownloadTraffic;
+
+use Response;
+
 class ViewController extends Controller {
     public function index() {
-        return view('welcome');
+        return view('welcome',
+            ['users' => 'App\User', 'files' => 'App\File', 'category' => 'App\Category', 'sub_category' => 'App\Sub_Category',
+                'movies' => 'App\Movie', 'series' => 'App\Series', 'musics' => 'App\Music', 'anime' => 'App\Anime',
+                'programs' => 'App\Program', 'games' => 'App\Game', 'others' => 'App\Other']);
     }
 
     public function show_as($value) {
@@ -37,7 +43,11 @@ class ViewController extends Controller {
         } else {
             return view('welcome');
         }
-        return view('welcome', ['value' => strtolower($value), 'types' => $types, 'categories' => 'App\Category', 'categoryNum' => $categoryNum]);
+        return view('welcome', ['value' => strtolower($value),
+            'file' => 'App\File',
+            'types' => $types,
+            'categories' => 'App\Category',
+            'categoryNum' => $categoryNum]);
 
     }
 
@@ -67,31 +77,38 @@ class ViewController extends Controller {
             return view('welcome');
         }
 
-        $FileName = str_replace('-', ' ', $name);
-
-        return view('type', ['value' => strtolower($value),
+        return view('type', [
+            'value' => strtolower($value),
             'file' => 'App\File',
             'types' => $types,
             'categories' => 'App\Category',
             'categoryNum' => $categoryNum,
-            'filename' => $FileName
+            'filename' => $name
         ]);
     }
 
     public function download_file($file) {
+
         $GetFile = File::where('id', $file)->first();
         if ($GetFile) {
 
-            $DownloadLog = DownloadTraffic::create([
-                'file_id'=>$GetFile->id,
-                'user_ip'=>Request::ip()
-            ]);
-
             if ($GetFile->file_category == '5') {
+
                 $GetFileName = Game::where('file_id', $file)->first();
-                return Storage::download('public/' . $GetFile->file_path . $GetFileName->file_name,
-                    $GetFile->file_name . '_' . $GetFileName->game_version . '.zip'
-                );
+
+                $DownloadLog = DownloadTraffic::create([
+                    'file_id'=>$GetFile->id,
+                    'user_ip'=>Request::ip()
+                ]);
+
+
+                $Path = public_path() .'/storage/'. $GetFile->file_path . $GetFileName->file_name;
+                $FileLocate = $GetFile->file_name . '_' . $GetFileName->game_version . '.zip';
+                $headers = array('Content-Type: application/zip');
+
+                return Response::download($Path, $FileLocate, $headers);
+
+
 
             } elseif ($GetFile->file_category == '6') {
                 $GetFileName = Program::where('file_id', $file)->first();

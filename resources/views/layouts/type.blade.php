@@ -2,7 +2,7 @@
     <div class="type-player">
         <div class="type-player-info mb-3">
             <div class="type-player-name">
-                {{$file::where('file_name',$filename)->first()->file_name}}
+                {{str_replace('-',' ',$file::where('file_name',$filename)->first()->file_name)}}
                 <span>
                     {{$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->movie_quality}}
                 </span>
@@ -32,7 +32,7 @@
                                 <img class="type-thumbnail"
                                      src="{{asset('storage/main-files/movie/'.$file->file_name.'/'.$type->movie_thumbnail)}}"
                                      alt="">
-                                <h6>{{$file->file_name}}</h6>
+                                <h6>{{str_replace('-',' ',$file->file_name)}}</h6>
                                 <span class="type-quality">{{$type->movie_quality}}</span>
                                 <span class="type-year">({{$type->movie_year}})</span>
                             </a>
@@ -47,18 +47,65 @@
 
 @elseif($value == 'series')
 
+
+    <div class="type-player">
+        <div class="type-player-info mb-3">
+            <div class="type-player-name">
+                {{$file::where('file_name',$filename)->first()->file_name}}
+                <h5>Season 1 - episode 1</h5>
+                <span>
+                    {{$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->series_quality}}
+                </span>
+            </div>
+            <span>
+                <small class="type-player-time"><i class="far fa-clock"></i>
+                    {{$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->series_duration}}
+                </small>
+            </span>
+        </div>
+        <video poster="{{asset('storage/'.
+    $file::where('file_name',$filename)->first()->file_path .'season-'. $types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->series_season .'/'.$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->series_thumbnail)}}"
+               id="moviePlayer" playsinline controls>
+            <source src="{{asset('storage/'.
+    $file::where('file_name',$filename)->first()->file_path .'season-'. $types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->series_season .'/'.$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->file_name)}}"
+                    type="video/mp4"/>
+        </video>
+    </div>
+
+    <div class="latest-type">
+        Other Episodes
+        <div class="latest-type-content" id="latestType">
+
+        </div>
+    </div>
+
+    <div class="type-also-like">
+        <div class="latest-type">
+            <span class="type-title">{{"You may also like"}}</span>
+            <div class="latest-type-content" id="latestType">
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="slickInfo"
+         style="display: none">@if(isset($value)){{$types::where('series_sub_category',$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->series_sub_category)->count()}}@endif</div>
+
 @elseif($value == 'anime')
+
 
 @elseif($value == 'music')
     <div class="type-player">
         <div class="type-player-info mb-3">
             <div class="type-player-name">
-                {{$file::where('file_name',$filename)->first()->file_name}}
+                {{str_replace('-',' ',$file::where('file_name',$filename)->first()->file_name)}}
                 <span>
-                    {{$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->music_singer}}
+                    {{str_replace('-',' ',$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->music_singer)}}
                 </span>
                 <span>
-                    {{$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->music_album}}
+                    {{str_replace('-',' ',$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->music_album)}}
                 </span>
             </div>
             <span>
@@ -89,9 +136,9 @@
                                 <img class="type-thumbnail"
                                      src="{{asset('storage/main-files/music/'.$file->file_name.'/'.$type->music_thumbnail)}}"
                                      alt="">
-                                <h6>{{$file->file_name}}</h6>
-                                <span class="type-quality">{{$type->music_singer}}</span>
-                                <span class="type-year">({{$type->music_year}})</span>
+                                <h6>{{str_replace('-',' ',$file->file_name)}}</h6>
+                                <span class="type-quality">{{str_replace('-',' ',$type->music_singer)}}</span>
+                                <span class="type-year">({{str_replace('-',' ',$type->music_year)}})</span>
                             </a>
                         </div>
                     @endforeach
@@ -109,7 +156,7 @@
     <div class="type-description">
         <div class="type-player-info mb-3">
             <div class="type-player-name">
-                {{$file::where('file_name',$filename)->first()->file_name}}
+                {{str_replace('-',' ',$file::where('file_name',$filename)->first()->file_name)}}
                 <span>
                     {{$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->game_version}}
                 </span>
@@ -156,11 +203,13 @@
     </div>
     <div id="slickInfo"
          style="display: none">@if(isset($value)){{$types::where('game_sub_category',$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->game_sub_category)->count()}}@endif</div>
+
+
 @elseif($value == 'programs')
     <div class="type-description">
         <div class="type-player-info mb-3">
             <div class="type-player-name">
-                {{$file::where('file_name',$filename)->first()->file_name}}
+                {{str_replace('-',' ',$file::where('file_name',$filename)->first()->file_name)}}
                 <span>
                     {{$types::where('file_id',$file::where('file_name',$filename)->first()->id)->first()->program_version}}
                 </span>
@@ -197,7 +246,7 @@
                                 <img class="type-thumbnail"
                                      src="{{asset('storage/main-files/program/'.$file->file_name.'/'.$type->program_thumbnail)}}"
                                      alt="">
-                                <h6>{{$file->file_name}}</h6>
+                                <h6>{{str_replace('-',' ',$file->file_name)}}</h6>
                             </a>
                         </div>
                     @endforeach

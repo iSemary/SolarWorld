@@ -49,6 +49,9 @@ body,table {
     font-size: 12px;
     margin: 0;
 }
+
+
+
 form#admin_users_control{
     overflow-x: scroll;
 }
@@ -251,6 +254,8 @@ form#admin_users_control::-webkit-scrollbar-thumb:hover {
     transition: 0.7s ease-in-out;
     box-shadow: 0 0 6px #000;
 }
+
+
 .type-other-things .type-other-info .type-other-info-plus{
     width: 200px;
     font-size: 15px;

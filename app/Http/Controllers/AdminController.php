@@ -34,13 +34,13 @@ class AdminController extends Controller {
                 'movies' => 'App\Movie', 'series' => 'App\Series', 'musics' => 'App\Music', 'anime' => 'App\Anime',
                 'programs' => 'App\Program', 'games' => 'App\Game', 'others' => 'App\Other']);
     }
-
-
+    public function explorer(){
+        return view('admin.explorer');
+    }
     public function upload() {
         toast('Welcome to Uploading Factory<br>"Here you can upload content and files to your website!"', 'success');
         return view('admin.upload')->with('categories', Category::class)->with('success', 'Post');
     }
-
     public function store(Request $request) {
 
         $fileType = $request->file_type;
@@ -66,8 +66,10 @@ class AdminController extends Controller {
 
             // Uploading File
 
-            $MovieStore = $request->movieFile->store('main-files/movie/' . $request->file_name, 'public');
-            $MovieThumbnialStore = $request->movieThumbnail->store('main-files/movie/' . $request->file_name, 'public');
+            $MovieStore = $request->movieFile->store('main-files/movie/'. str_replace(' ','-',$request->file_name),
+                'public');
+            $MovieThumbnialStore = $request->movieThumbnail->store('main-files/movie/' . str_replace(' ','-',$request->file_name),
+                'public');
 
             // Movie Duration
 
@@ -78,8 +80,8 @@ class AdminController extends Controller {
             // Upload File Data to DB
 
             $File = File::create([
-                'file_name' => $request->file_name,
-                'file_path' => 'main-files/movie/' . $request->file_name . '/',
+                'file_name' => str_replace(' ','-',$request->file_name),
+                'file_path' => 'main-files/movie/' . str_replace(' ','-',$request->file_name) . '/',
                 'file_category' => '1',
                 'file_hash_key' => md5($request->movieFile),
                 'username_uploaded' => auth::user()->user_name
@@ -119,7 +121,7 @@ class AdminController extends Controller {
                 return response()->json($validator->errors()->first());
             }
 
-            $SeriesThumbnialStore = $request->seriesThumbnail->store('main-files/series/'. $request->file_name .'/season-'.$request->series_season.'/' , 'public');
+            $SeriesThumbnialStore = $request->seriesThumbnail->store('main-files/series/'. str_replace(' ','-',$request->file_name) .'/season-'.$request->series_season.'/' , 'public');
 
 
 
@@ -137,7 +139,7 @@ class AdminController extends Controller {
 
 
                 // Uploading Files
-                $SeriesStore = $SeriesFiles->store('main-files/series/'. $request->file_name .'/season-'.$request->series_season.'/' , 'public');
+                $SeriesStore = $SeriesFiles->store('main-files/series/'. str_replace(' ','-',$request->file_name) .'/season-'.$request->series_season.'/' , 'public');
 
 
                 // Series Duration
@@ -148,8 +150,8 @@ class AdminController extends Controller {
                 // Upload File Data to DB
 
                 $File = File::create([
-                    'file_name' => $request->file_name,
-                    'file_path' => 'main-files/series/' . $request->file_name . '/',
+                    'file_name' => str_replace(' ','-',$request->file_name),
+                    'file_path' => 'main-files/series/' . str_replace(' ','-',$request->file_name) . '/',
                     'file_category' => '2',
                     'file_hash_key' => md5($SeriesFiles),
                     'username_uploaded' => auth::user()->user_name
@@ -190,7 +192,7 @@ class AdminController extends Controller {
                 return response()->json($validator->errors()->first());
             }
 
-            $AnimeThumbnialStore = $request->animeThumbnail->store('main-files/anime/'. $request->file_name .'/season-'.$request->anime_season.'/' , 'public');
+            $AnimeThumbnialStore = $request->animeThumbnail->store('main-files/anime/'. str_replace(' ','-',$request->file_name) .'/season-'.$request->anime_season.'/' , 'public');
 
 
 
@@ -208,7 +210,7 @@ class AdminController extends Controller {
 
 
                 // Uploading Files
-                $AnimeStore = $AnimeFiles->store('main-files/anime/'. $request->file_name .'/season-'.$request->anime_season.'/' , 'public');
+                $AnimeStore = $AnimeFiles->store('main-files/anime/'. str_replace(' ','-',$request->file_name) .'/season-'.$request->anime_season.'/' , 'public');
 
 
                 // Anime Duration
@@ -219,8 +221,8 @@ class AdminController extends Controller {
                 // Upload File Data to DB
 
                 $File = File::create([
-                    'file_name' => $request->file_name,
-                    'file_path' => 'main-files/anime/' . $request->file_name . '/',
+                    'file_name' => str_replace(' ','-',$request->file_name),
+                    'file_path' => 'main-files/anime/' . str_replace(' ','-',$request->file_name) . '/',
                     'file_category' => '4',
                     'file_hash_key' => md5($AnimeFiles),
                     'username_uploaded' => auth::user()->user_name
@@ -255,7 +257,6 @@ class AdminController extends Controller {
                 'music_singer' => 'required',
                 'musicThumbnail' => 'required',
                 'music_year' => 'required',
-                'music_language' => 'required',
                 'musicFile' => 'required|mimes:application/octet-stream,audio/mpeg,mpga,mp3,wav',
             ]);
 
@@ -263,48 +264,49 @@ class AdminController extends Controller {
                 return response()->json($validator->errors()->first());
             } elseif (File::where('file_hash_key', md5($request->musicFile))->count() > 0) {
                 return response()->json('File already exist');
+            }else {
+                // Uploading File
+                $MusicStore = $request->musicFile->storeAs('main-files/music/' . str_replace(' ','-',$request->file_name),
+                    $request->musicFile->hashName().'.mp3',
+                    'public');
+
+                $MusicThumbnialStore = $request->musicThumbnail->store('main-files/music/' . str_replace(' ','-',$request->file_name),
+                    'public');
+
+                // music Duration
+                $getID3 = new \getID3;
+                $getFile = $getID3->analyze($request->musicFile);
+                $duration = date('H:i:s.v', $getFile['playtime_seconds']);
+
+                // Upload File Data to DB
+
+                $File = File::create([
+                    'file_name' => str_replace(' ','-',$request->file_name),
+                    'file_path' => 'main-files/music/' . str_replace(' ','-',$request->file_name) . '/',
+                    'file_category' => '3',
+                    'file_hash_key' => md5($request->musicFile),
+                    'username_uploaded' => auth::user()->user_name
+                ]);
+
+                // Upload Movie Data To DB
+
+                $Music = Music::create([
+                    'file_id' => $File->id,
+                    'file_uploaded_name' => $request->musicFile->getClientOriginalName(),
+                    'file_name' => $request->musicFile->hashName() .'.mp3',
+                    'music_size' => $request->musicFile->getSize(),
+                    'music_sub_category' => $request->music_sub_category,
+                    'music_album' => str_replace(' ','-',$request->music_album),
+                    'music_singer' => str_replace(' ','-',$request->music_singer),
+                    'music_thumbnail' => $request->musicThumbnail->hashName(),
+                    'music_year' => $request->music_year,
+                    'music_duration' => $duration,
+                    'music_language' => $request->music_language,
+                ]);
+
+
+                return response()->json('');
             }
-
-
-            // Uploading File
-
-            $MusicStore = $request->musicFile->store('main-files/music/' . $request->file_name, 'public');
-            $MusicThumbnialStore = $request->musicThumbnail->store('main-files/music/' . $request->file_name, 'public');
-
-            // music Duration
-
-            $getID3 = new \getID3;
-            $getFile = $getID3->analyze($request->musicFile);
-            $duration = date('H:i:s.v', $getFile['playtime_seconds']);
-
-            // Upload File Data to DB
-
-            $File = File::create([
-                'file_name' => $request->file_name,
-                'file_path' => 'main-files/music/' . $request->file_name . '/',
-                'file_category' => '3',
-                'file_hash_key' => md5($request->musicFile),
-                'username_uploaded' => auth::user()->user_name
-            ]);
-
-            // Upload Movie Data To DB
-
-            $Music = Music::create([
-                'file_id' => $File->id,
-                'file_uploaded_name' => $request->musicFile->getClientOriginalName(),
-                'file_name' => $request->musicFile->hashName(),
-                'music_size' => $request->musicFile->getSize(),
-                'music_sub_category' => $request->music_sub_category,
-                'music_album' => $request->music_album,
-                'music_singer' => $request->music_singer,
-                'music_thumbnail' => $request->musicThumbnail->hashName(),
-                'music_year' => $request->music_year,
-                'music_duration' => $duration,
-                'music_language' => $request->music_language,
-            ]);
-
-
-            return response()->json('');
 
         }
         elseif ($fileType == "program") {
@@ -328,14 +330,14 @@ class AdminController extends Controller {
 
             // Uploading File
 
-            $ProgramStore = $request->programFile->store('main-files/program/' . $request->file_name, 'public');
-            $ProgramThumbnialStore = $request->programThumbnail->store('main-files/program/' . $request->file_name, 'public');
+            $ProgramStore = $request->programFile->store('main-files/program/' . str_replace(' ','-',$request->file_name), 'public');
+            $ProgramThumbnialStore = $request->programThumbnail->store('main-files/program/' . str_replace(' ','-',$request->file_name), 'public');
 
             // Upload File Data to DB
 
             $File = File::create([
-                'file_name' => $request->file_name,
-                'file_path' => 'main-files/program/' . $request->file_name . '/',
+                'file_name' => str_replace(' ','-',$request->file_name),
+                'file_path' => 'main-files/program/' . str_replace(' ','-',$request->file_name) . '/',
                 'file_category' => '6',
                 'file_hash_key' => md5($request->programFile),
                 'username_uploaded' => auth::user()->user_name
@@ -377,14 +379,14 @@ class AdminController extends Controller {
 
             // Uploading File
 
-            $GameStore = $request->gameFile->store('main-files/game/' . $request->file_name, 'public');
-            $GameThumbnialStore = $request->gameThumbnail->store('main-files/game/' . $request->file_name, 'public');
+            $GameStore = $request->gameFile->store('main-files/game/' .str_replace(' ','-',$request->file_name), 'public');
+            $GameThumbnialStore = $request->gameThumbnail->store('main-files/game/' . str_replace(' ','-',$request->file_name), 'public');
 
             // Upload File Data to DB
 
             $File = File::create([
-                'file_name' => $request->file_name,
-                'file_path' => 'main-files/game/' . $request->file_name . '/',
+                'file_name' => str_replace(' ','-',$request->file_name),
+                'file_path' => 'main-files/game/' . str_replace(' ','-',$request->file_name) . '/',
                 'file_category' => '5',
                 'file_hash_key' => md5($request->gameFile),
                 'username_uploaded' => auth::user()->user_name

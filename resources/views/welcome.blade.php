@@ -84,7 +84,8 @@
                 function() {
 
                     $(this).css({
-                        'filter': 'brightness(0.2)'
+                        'filter': 'brightness(0.2)',
+                        // 'transform': 'scale3d(1.1, 1.1, 1.1) rotate(5deg)'
                     });
                     $(this).next('.type-other-info-plus').css({
                      'position': 'absolute',
@@ -97,13 +98,16 @@
                     });
                 },function() {
                     $(this).css({
-                        'filter': 'brightness(1)'
+                        'filter': 'brightness(1)',
+                        // 'transform': 'scale3d(1, 1, 1) rotate(0deg)'
+
                     });
                     $(this).next('.type-other-info-plus').css({
                         'position': '',
                         'top': '',
                         'bottom':'',
                         'right': '',
+
                     });
                     $(this).next('.type-other-info-plus').find('.type-other-quality').css({
                         'background-color':'#d20000',
