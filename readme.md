@@ -2,13 +2,6 @@
 
 SolarWorld is a web application built on the Laravel-JQuery framework, designed to offer a user-friendly platform for file access, watching, and downloads, similar to Netflix and YTS. The project provides advanced search capabilities, efficient file categorization, and user management, making it an ideal choice for anyone looking to create or enhance a file downloading platform.
 
-## Preview
-
-<img src="https://github.com/iSemary/SolarWorld/blob/master/preview/1.webp" height="350px" alt="Image 1">
-<img src="https://github.com/iSemary/SolarWorld/blob/master/preview/2.webp" height="350px" alt="Image 2">
-<img src="https://github.com/iSemary/SolarWorld/blob/master/preview/3.webp" height="350px" alt="Image 3">
-<img src="https://github.com/iSemary/SolarWorld/blob/master/preview/4.webp" height="350px" alt="Image 4">
-
 ## Features
 
 - **Watch and Download Media & Files**
@@ -16,6 +9,14 @@ SolarWorld is a web application built on the Laravel-JQuery framework, designed 
 - **Advanced Search** 
 - **File Categorization** 
 - **User Management** 
+
+
+## Preview
+
+<img src="https://github.com/iSemary/SolarWorld/blob/master/preview/1.webp" height="350px" alt="Image 1">
+<img src="https://github.com/iSemary/SolarWorld/blob/master/preview/2.webp" height="350px" alt="Image 2">
+<img src="https://github.com/iSemary/SolarWorld/blob/master/preview/3.webp" height="350px" alt="Image 3">
+<img src="https://github.com/iSemary/SolarWorld/blob/master/preview/4.webp" height="350px" alt="Image 4">
 
 ## How to Use
 
